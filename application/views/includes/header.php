@@ -8,7 +8,6 @@
     <title><?php echo $pageTitle; ?></title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.4 -->
-    <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- FontAwesome 4.3.0 -->
     <link href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -38,9 +37,11 @@
     <![endif]-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+    <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-    
+
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -61,8 +62,6 @@
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
     <div class="alert-dlg" hidden>
-      <div class="alert-body">
-      </div>
     </div>
     <div class="wrapper">
       

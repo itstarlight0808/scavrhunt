@@ -36,7 +36,9 @@ function isJudgeGamesForCheck(){
 	$.post(baseURL + "isJudgeGamesForCheck", function(res){
 		res = JSON.parse(res);
 		if(res.isExist){
-			$(".alert-body").append(`<h4>There are some games for waiting a judgement.</h4>`)
+			if($(".alert-dlg").hasClass("ui-dialog-content"))
+				$(".alert-dlg").dialog('destroy');
+			$(".alert-dlg").html(`<h4>There are some games for waiting a judgement.</h4>`)
 			$(".alert-dlg").dialog({
 				title : "Warning",
 				modal : false,

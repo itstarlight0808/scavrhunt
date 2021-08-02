@@ -72,6 +72,13 @@
                                         <p><i class="fa fa-star-o"></i><?php echo $curChallenge->points;?> Points</p>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <p><i class="fa fa-star"></i><?php echo $chgResult->points;?> Points (Earned)</p>
+                                        <p>
+                                            <?php if($chgResult->status_id == 2){ ?>
+                                                <i class="fa fa-check-circle judged-icon" title="Judged"></i>
+                                            <?php }else{ ?>
+                                                <i class="fa fa-exclamation-circle awaiting-judge-icon" title="Awaiting for Judgement"></i>
+                                            <?php } ?>
+                                        </p>
                                     </div>
                                     <div class="post-info">
                                         <!-- Post Comments -->

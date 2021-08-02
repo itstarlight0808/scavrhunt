@@ -26,7 +26,13 @@ class Scavrhunts extends BaseController
         $this->isLoggedIn();
         date_default_timezone_set('US/Eastern');
     }
-
+    public function isJudgeGamesForCheck(){
+        $res = $this->challenge_model->isJudgeGamesForCheck();
+        if(count($res) > 0)
+            echo json_encode(array('isExist'=>1));
+        else
+            echo json_encode(array("isExist"=>0));
+    }
     public function manage($schoolId)
     {
         /*if($this->isAdmin() == TRUE)
@@ -750,7 +756,7 @@ class Scavrhunts extends BaseController
         //}
     }
 
-    public function judgeChallenges($huntId)
+    public function judgeChallenges($huntId, $gamecodeId)
     {
         /*if($this->isAdmin() == TRUE)
         {
@@ -760,11 +766,12 @@ class Scavrhunts extends BaseController
         {*/   
             $chgPhotoVideos = $this->challenge_model->getPhotoVideoChallengesByHunt($huntId);
             $chgOthers = $this->challenge_model->getOtherChallengesByHunt($huntId);
-            
+
             $data['huntId'] = $huntId;
+            $data['gamecodeId'] = $gamecodeId;
             $data['chgPhotoVideos'] = $chgPhotoVideos;
             $data['chgOthers'] = $chgOthers;
-                        
+
             $this->load->view("scavenger-hunts/judgeChallenges", $data);
         //}
     }
@@ -778,13 +785,14 @@ class Scavrhunts extends BaseController
         else
         {*/
             $huntId = $_POST['huntId'];
+            $gamecodeId = $_POST['gamecodeId'];
             $challengeId = $_POST['challengeId'];
 
             //$challengeInfo = $this->challenge_model->getChallengeInfo($challengeId);
             //$chgTypeId = intval($challengeInfo->chg_type_id);
 
             $submittedResult = array();
-            $result = $this->challenge_model->getSubmittedResults($huntId, $challengeId);
+            $result = $this->challenge_model->getSubmittedResults($huntId, $gamecodeId, $challengeId);
             $k = 0;
             foreach ($result as $record)
             {
@@ -797,8 +805,9 @@ class Scavrhunts extends BaseController
                 $submittedResult[$k]["teamname"] = $teamname;
                 $submittedResult[$k]["answer"] = $record->chg_result;
                 $submittedResult[$k]["points"] = $record->points;
+                $submittedResult[$k]["judge_status"] = $record->status_id < 2 ? 0 : 1;
             }
-            
+
             echo json_encode($submittedResult);
             exit;
         //}
@@ -814,7 +823,7 @@ class Scavrhunts extends BaseController
         {*/
             $chgResultId = $_POST["chgResultId"];
             $points = $_POST["points"];
-            $judgeInfo = array('points' => $points);
+            $judgeInfo = array('points' => $points, 'status_id'=>2);
             $result = $this->challenge_model->editChallengeResult($judgeInfo, $chgResultId);
             echo "success";
             exit;

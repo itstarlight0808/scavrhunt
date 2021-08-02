@@ -691,7 +691,11 @@ ul.slider-pagi {padding-left:0px;}
 
 /* Post info */
 
-.post-info {margin-bottom: 10px;}
+.post-info {
+	margin-bottom: 10px;
+	display : flex;
+	align-items : center;
+}
 
 .post-info p {
 	margin-right: 15px;

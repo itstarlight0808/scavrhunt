@@ -87,6 +87,7 @@ class Huntform extends CI_Controller
                         {
                             $curChgNum--;
                             $curChallenge = $this->challenge_model->getCurrentChallengeByHunt($huntId, $curChgNum);
+                            $leaderBoard = $this->challenge_model->getLeaderBoardByHunt($huntId);
                             if (isset($curChallenge))
                             {
                                 $data['gamecode'] = $gamecode;
@@ -100,6 +101,7 @@ class Huntform extends CI_Controller
                                 $chgTypeName = $chgType->name;
                                 $data['chgTypeName'] = $chgTypeName;
                                 $data['curChgNum'] = $curChgNum;
+                                $data['leaderBoard'] = $leaderBoard;
                                 $this->load->view("scavenger-hunts/huntform.php", $data);
                             }
                             else
@@ -147,7 +149,7 @@ class Huntform extends CI_Controller
                 $gameCodeInfo = $this->hunt_model->getHuntGameCodeInfo($teamId);
                 if (isset($gameCodeInfo))
                     $gameCodeId = intval($gameCodeInfo->id);
-                
+
                 $chgResult = $this->challenge_model->getChallengeResult($gameCodeId, $huntId, intval($curChallenge->id));
                 if (isset($chgResult))
                 {
@@ -217,6 +219,8 @@ class Huntform extends CI_Controller
                     {
                         $playerId = $this->session->userdata('playerId');
                         $teamId = $this->session->userdata('teamId');
+                        $teamLeaderBoard = $this->challenge_model->getLeaderBoardByTeam($huntId, $teamId);
+                        $totalPoints = $this->challenge_model->getTotalPointsByHunt($huntId);
 
                         $data['gamecode'] = $gamecode;
                         $data['playerId'] = $playerId;
@@ -226,6 +230,8 @@ class Huntform extends CI_Controller
                         $data['chgCount'] = $chgCount;
                     
                         $data['curChgNum'] = $curChgNum;
+                        $data['teamLeaderBoard'] = $teamLeaderBoard;
+                        $data['totalPoints'] = $totalPoints;
                         $this->load->view("scavenger-hunts/huntEndForm.php", $data);
                     }
                 }
@@ -304,7 +310,7 @@ class Huntform extends CI_Controller
         $inpAnswer = $_POST['inpAnswer'];
 
         $points = 0;
-        $statusId = 1;
+        $statusId = 1; // submitted , wating for judgement..
         $chgType = 1;
         $challenge = $this->challenge_model->getChallengeInfo($challengeId);
         if (isset($challenge))
@@ -315,8 +321,11 @@ class Huntform extends CI_Controller
         }
         else if ($chgType == 2 || $chgType == 3)
         {
+            $statusId = 2; // auto judged..
             $chgAnswer = $inpAnswer;
-            $points = $this->challenge_model->judgeQPAnswer($challengeId, $chgAnswer);
+            $arr_answers = explode(",", $challenge->puzzle_answer);
+            if (in_array($chgAnswer, $arr_answers))
+                $points = intval($challenge->points);
         }
         else
         {

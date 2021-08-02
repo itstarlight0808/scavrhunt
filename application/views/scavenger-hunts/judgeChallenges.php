@@ -50,7 +50,8 @@
         .tab {
         overflow: hidden;
         border: 1px solid #ccc;
-        background-color: #f1f1f1;
+        background-color: #bda3fa;
+        color : white;
         }
 
         /* Style the buttons inside the tab */
@@ -67,12 +68,14 @@
 
         /* Change background color of buttons on hover */
         .tab button:hover {
-        background-color: #ddd;
+            color : #9a72fa;
+            background-color : white;
         }
 
         /* Create an active/current tablink class */
         .tab button.active {
-        background-color: #ccc;
+            color : white;
+            background-color : #8855ff;
         }
 
         /* Style the tab content */
@@ -122,10 +125,10 @@
                         foreach ($chgPhotoVideos as $record)
                         {
                             $puzzle_page = $record->puzzle_page;
-                            $puzzle_page = str_replace('href="assets', 'href="../assets', $puzzle_page);
-                            $puzzle_page = str_replace('<img class="img-responsive" src="assets', '<img class="img-responsive" src="../assets', $puzzle_page);
+                            $puzzle_page = str_replace('href="assets', 'href="../../assets', $puzzle_page);
+                            $puzzle_page = str_replace('<img class="img-responsive" src="assets', '<img class="img-responsive" src="../../assets', $puzzle_page);
                     ?>
-                        <tr onclick='getSubmittedAnswer(<?php echo $huntId; ?>, <?php echo $record->id; ?>, <?php echo $record->chg_type_id; ?>, "<?php echo $record->description; ?>", <?php echo intval($record->points); ?>)'>
+                        <tr onclick='getSubmittedAnswer(<?php echo $huntId; ?>, <?php echo $gamecodeId; ?> , <?php echo $record->id; ?>, <?php echo $record->chg_type_id; ?>, "<?php echo $record->description; ?>", <?php echo intval($record->points); ?>)'>
                             <td><h3><?php echo $k; ?></h3></td>
                             <td>
                                 <h5>Description:</h5>
@@ -155,10 +158,10 @@
                         foreach ($chgOthers as $record)
                         {
                             $puzzle_page = $record->puzzle_page;
-                            $puzzle_page = str_replace('href="assets', 'href="../assets', $puzzle_page);
-                            $puzzle_page = str_replace('<img class="img-responsive" src="assets', '<img class="img-responsive" src="../assets', $puzzle_page);
+                            $puzzle_page = str_replace('href="assets', 'href="../../assets', $puzzle_page);
+                            $puzzle_page = str_replace('<img class="img-responsive" src="assets', '<img class="img-responsive" src="../../assets', $puzzle_page);
                     ?>
-                        <tr onclick='getSubmittedAnswer(<?php echo $huntId; ?>, <?php echo $record->id; ?>, <?php echo $record->chg_type_id; ?>, "<?php echo $record->description; ?>", <?php echo intval($record->points); ?>)'>
+                        <tr onclick='getSubmittedAnswer(<?php echo $huntId; ?>, <?php echo $gamecodeId; ?>, <?php echo $record->id; ?>, <?php echo $record->chg_type_id; ?>, "<?php echo $record->description; ?>", <?php echo intval($record->points); ?>)'>
                             <td><h3><?php echo $k; ?></h3></td>
                             <td>
                                 <h5>Description:</h5>
@@ -184,9 +187,9 @@
                 <h3 id="selChgDesc"></h3>
                 <table class="table table-bordered table-responsive table-hover">
                 <thead>
-                    <td style="width:10%;"><h6>No</h6></td>
-                    <td style="width:20%;"><h6>Team<br>Name</h6></td>
-                    <td><h6>Submitted<br>Answer</h6></td>
+                    <td style="width:10%;vertical-align:middle;"><h6>No</h6></td>
+                    <td style="width:20%;"><h6>Team Name</h6></td>
+                    <td style="vertical-align:middle"><h6>Submitted Answer</h6></td>
                 </thead>
                 <tbody id="tbl_submitted">
                 </tbody>
@@ -198,7 +201,7 @@
 </html>
 <script language="javascript">
 $(document).ready(function(){
-    openChallengeTab(event, "divChgPhotos");
+    $(".tablinks").first().click();
 });
 function openChallengeTab(evt, divTabName)
 {
@@ -211,10 +214,11 @@ function openChallengeTab(evt, divTabName)
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
+    $(evt.target).addClass("active");
     document.getElementById(divTabName).style.display = "block";
     //evt.currentTarget.className += " active";
 }
-function getSubmittedAnswer(huntId, chgId, chgTypeId, chgDescription, chgMaxPoints)
+function getSubmittedAnswer(huntId, gamecodeId, chgId, chgTypeId, chgDescription, chgMaxPoints)
 {
     var str_body = "";
     $("#selChgDesc").text(chgDescription + " ( " + chgMaxPoints + " Points )");
@@ -223,6 +227,7 @@ function getSubmittedAnswer(huntId, chgId, chgTypeId, chgDescription, chgMaxPoin
         post_url, 
         {
             huntId: huntId,
+            gamecodeId : gamecodeId,
             challengeId: chgId
         }, 
         function(res)
@@ -236,9 +241,15 @@ function getSubmittedAnswer(huntId, chgId, chgTypeId, chgDescription, chgMaxPoin
                 str_body += '<td>';
                 str_body += '<h4>' + result[i].teamname + '</h4>';
                 str_body += '<h6>Points: </h6>';
-                str_body += '<input type="number" id="pt_' + result[i].id + '" value="' + result[i].points + '" style="width:80%;" min="1" max="' + chgMaxPoints + '"/>';
+                str_body += '<input type="number" id="pt_' + result[i].id +
+                                    '" value="' + result[i].points + 
+                                    '" style="width:80%;" min="1" max=' + chgMaxPoints +
+                                    " " + (result[i].judge_status?'disabled':'')+'/>';
                 str_body += '<br>';
-                str_body += '<button class="btn btn-info" onclick="saveChallengePoints(' + result[i].id + ')">Save</button>';
+                if(!result[i].judge_status)
+                    str_body += '<button class="btn btn-info" onclick="saveChallengePoints(' + result[i].id + ')"><i class="fa fa-save"></i> Save</button>';
+                else
+                    str_body += '<div style="margin-top:20px"><i class="fa fa-check-circle judged-icon">Judged</i></div>';
                 str_body += '</td>';
                 str_body += '<td>';
                 if (chgTypeId == 1)
@@ -255,8 +266,14 @@ function getSubmittedAnswer(huntId, chgId, chgTypeId, chgDescription, chgMaxPoin
 
 function saveChallengePoints(chgResultId)
 {
-    var points = eval($("#pt_" + chgResultId).val());
-    var post_url = "<?php echo base_url(); ?>saveChallengePoints";
+    let el = $("#pt_" + chgResultId);
+    let points = $(el).val();
+    let maxPoints = $(el).attr("max");
+    if(points > maxPoints){
+        alert(`Points should be ${maxPoints} at most!`);
+        return;
+    }
+    let post_url = "<?php echo base_url(); ?>saveChallengePoints";
     $.post(
         post_url, 
         {
@@ -265,7 +282,9 @@ function saveChallengePoints(chgResultId)
         }, 
         function(res)
         {
-            alert("Saved successfully!");
+            let container = $("#tbl_submitted button").parent();
+            $(container).find("button").remove();
+            $(container).append('<div style="margin-top:20px"><i class="fa fa-check-circle judged-icon">Judged</i></div>');
         }
     );
 }

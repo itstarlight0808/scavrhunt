@@ -82,9 +82,50 @@ class Challenge_model extends CI_Model
             return NULL;
     }
 
-    public function getSubmittedResults($huntId, $challengeId)
+    public function getLeaderBoardByHunt($huntId) {
+        $sql = "SELECT gm.team_id,
+                    IF(teams.players_count=1, CONCAT('Room ', teams.room_id), teams.team_name) AS team_name,
+                    SUM(ch.points) AS points
+                FROM challenge_judge AS ch
+                LEFT JOIN hunt_gamecode AS gm ON ch.gamecode_id = gm.id
+                LEFT JOIN teams ON teams.id = gm.team_id
+                WHERE ch.hunt_id = $huntId
+                GROUP BY ch.gamecode_id
+                LIMIT 0, 10";
+        $result = $this->db->query($sql);
+
+        return $result->result();
+    }
+    public function getLeaderBoardByTeam($huntId, $teamId) {
+        $this->db->select("ju.chg_id, ch.chg_name, ch.points, ju.points AS earned_points, ju.status_id");
+        $this->db->from("challenge_judge AS ju");
+        $this->db->join("challenges AS ch", "ju.chg_id = ch.id", "LEFT");
+        $this->db->join("hunt_gamecode AS gc", "ju.gamecode_id = gc.id", "LEFT");
+        $this->db->where("ju.hunt_id", $huntId);
+        $this->db->where("gc.team_id", $teamId);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function getTotalPointsByHunt($huntId) {
+        $this->db->select("SUM(points) as points");
+        $this->db->from("challenges");
+        $this->db->where("hunt_id", $huntId);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+    public function isJudgeGamesForCheck(){
+        $this->db->select("COUNT(*) as count");
+        $this->db->where('status_id = 1');
+        $this->db->from($this->_tablename3);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+    public function getSubmittedResults($huntId, $gamecodeId, $challengeId)
     {
         $this->db->where('hunt_id', $huntId);
+        $this->db->where('gamecode_id', $gamecodeId);
         $this->db->where('chg_id', $challengeId);
         $this->db->where('status_id != 3');
         $query = $this->db->get($this->_tablename3);
@@ -96,32 +137,9 @@ class Challenge_model extends CI_Model
         $this->db->where('gamecode_id', $gameCodeId);
         $this->db->where('hunt_id', $huntId);
         $this->db->where('chg_id', $challengeId);
-        $this->db->where('status_id = 1');
+        $this->db->where('(status_id = 1 OR status_id = 2)');
         $query = $this->db->get($this->_tablename3);
         return $query->row();
-    }
-
-    public function judgeQPAnswer($challengeId, $chgAnswer)
-    {
-        $points = 0;
-        $this->db->where('id', $challengeId);
-        $query = $this->db->get($this->_tablename);
-        $result = $query->row();
-        if (isset($result))
-        {
-            /*if (intval($result->multi_answer) == 0)
-            {
-                if ($result->puzzle_answer == $chgAnswer)
-                    $points = intval($result->points);
-            }
-            else
-            {    
-            }*/
-            $arr_answers = explode(",", $result->puzzle_answer);
-            if (in_array($chgAnswer, $arr_answers))
-                $points = intval($result->points);
-        }
-        return $points;
     }
 
     public function checkAlreadySubmitted($gameCodeId, $challengeId)
@@ -129,7 +147,7 @@ class Challenge_model extends CI_Model
         $this->db->where('gamecode_id', $gameCodeId);
         $this->db->where('chg_id', $challengeId);
         $this->db->where('chg_result != ""');
-        $this->db->where('status_id = 1');
+        $this->db->where('(status_id = 1 OR status_id = 2)');
         $query = $this->db->get($this->_tablename3);
         $result = $query->row();
         if (isset($result))
@@ -210,7 +228,7 @@ class Challenge_model extends CI_Model
     {
         $deleted = date('Y-m-d H:i:s');
         $judgeInfo = array(
-            'status_id' => 4,
+            'status_id' => 3,
             'deleted' => $deleted
         );
         $this->db->where('chg_id', $challengeId);
@@ -220,11 +238,11 @@ class Challenge_model extends CI_Model
 
     public function getTeamsForJudge($gameCodeIds, $huntIds)
     {
-        $this->db->distinct();
-        $this->db->select('player_id, gamecode_id, hunt_id');
+        $this->db->select('player_id, gamecode_id, hunt_id, SUM(status_id) as status');
         $this->db->where_in('gamecode_id', $gameCodeIds);
         $this->db->where_in('hunt_id', $huntIds);
-        $this->db->where('status_id != 4');
+        $this->db->where('status_id != 3');
+        $this->db->group_by("player_id, gamecode_id, hunt_id");
         $query = $this->db->get($this->_tablename3);
         return $query->result();
     }

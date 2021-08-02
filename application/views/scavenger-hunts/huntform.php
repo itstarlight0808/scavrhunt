@@ -228,6 +228,21 @@
                                     </ul>
                                 </div>
                             </div>
+                            <div class="leaderboard-container">
+                                <h5><span>LEADERBOARD</span></h5>
+                                <div style="text-align:left">
+                                    <?php
+                                        for($i=0; $i<count($leaderBoard); $i++){ 
+                                            $one = $leaderBoard[$i];
+                                            echo "<div>
+                                                    <span>
+                                                        $i. $one->team_name .... $one->points
+                                                    </span>
+                                                </div>";
+                                        }
+                                    ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

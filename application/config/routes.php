@@ -141,7 +141,7 @@ $route['insertChallenge'] = 'scavrhunts/insertChallenge';
 $route['gotoChallengeDetails/(:num)'] = 'scavrhunts/gotoChallengeDetails/$1';
 $route['uploadChallengeImage'] = 'scavrhunts/uploadChallengeImage2';
 $route['updateChallenge'] = 'scavrhunts/editChallenge';
-$route['judgeChallenges/(:num)'] = 'scavrhunts/judgeChallenges/$1';
+$route['judgeChallenges/(:num)/(:num)'] = 'scavrhunts/judgeChallenges/$1/$2';
 $route['getChallengeAnswers'] = 'scavrhunts/getChallengeAnswers';
 $route['saveChallengePoints'] = 'scavrhunts/saveChallengePoints';
 $route['copyChallenge/(:num)'] = 'scavrhunts/copyChallenge/$1';
@@ -155,6 +155,7 @@ $route['updateChallengeDB'] = 'scavrhunts/editChallengeDB';
 $route['copyChallengeDB/(:num)/(:num)'] = 'scavrhunts/copyChallengeDB/$1/$2';
 $route['deleteChallengeDB/(:num)/(:num)'] = 'scavrhunts/deleteChallengeDB/$1/$2';
 $route['copyChallengeDBToHunt/(:num)/(:num)'] = 'scavrhunts/copyChallengeDBToHunt/$1/$2';
+$route['isJudgeGamesForCheck'] = "scavrhunts/isJudgeGamesForCheck";
 
 $route['gotoHuntGame'] = 'huntform';
 $route['endHuntGame'] = 'huntform/huntEndForm';

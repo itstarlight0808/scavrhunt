@@ -8,6 +8,7 @@
     <title><?php echo $pageTitle; ?></title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.4 -->
+    <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <link href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- FontAwesome 4.3.0 -->
     <link href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -55,8 +56,14 @@
 
     <script src="<?php echo base_url(); ?>assets/libs/jquery-timepicker-1.3.5/jquery.timepicker.js"></script>
     <link href="<?php echo base_url(); ?>assets/libs/jquery-timepicker-1.3.5/jquery.timepicker.css" rel="stylesheet">
+
+    <script src="<?php echo base_url(); ?>assets/js/common.js"></script>
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
+    <div class="alert-dlg" hidden>
+      <div class="alert-body">
+      </div>
+    </div>
     <div class="wrapper">
       
       <header class="main-header">

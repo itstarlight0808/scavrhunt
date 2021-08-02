@@ -35,3 +35,48 @@ li.challenge-number span.solved{
 li.challenge-number span.not-solved{
     color: white;
 }
+
+.judged-icon {
+    font-size : 35px;
+    color : #2d45bb !important;
+    cursor : pointer;
+}
+.awaiting-judge-icon {
+    font-size : 35px;
+    color : #e33737 !important;
+    cursor : pointer;
+}
+
+.leaderboard-container {
+    margin-top : 50px;
+}
+.team-leaderboard-container {
+    
+}
+.team-leaderboard-table {
+    margin : auto;
+    border-radius : 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.team-leaderboard-table th {
+    background-color: #009879;
+    color: #ffffff;
+}
+.team-leaderboard-table td, .team-leaderboard-table th {
+    padding : 10px 15px;
+}
+.team-leaderboard-table tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.team-leaderboard-table tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.team-leaderboard-table tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.team-leaderboard-table tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}

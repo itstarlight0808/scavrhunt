@@ -3,31 +3,34 @@
     <style>
         /* Style the tab */
         .tab {
-        overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #9a72fa;
+            margin-top : 10px;
+            color : white;
         }
 
         /* Style the buttons inside the tab */
         .tab button {
-        background-color: inherit;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
-        font-size: 17px;
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 10px 16px;
+            transition: 0.3s;
+            font-size: 17px;
         }
 
         /* Change background color of buttons on hover */
         .tab button:hover {
-        background-color: #ddd;
+            background-color : white;
+            color: #5c1cf6;
         }
 
         /* Create an active/current tablink class */
         .tab button.active {
-        background-color: #ccc;
+            background-color: #ccc;
         }
 
         /* Style the tab content */
@@ -54,6 +57,9 @@
         }
         #myTable tbody tr td, #myTable2 tbody tr td, #roomTable tbody tr td{
             vertical-align: middle;
+        }
+        a:hover {
+            text-decoration : underline;
         }
     </style>
 </head>
@@ -210,7 +216,11 @@
                         <td><?php echo $record["samedevice"]; ?></td>
                         <td><?php echo $record["roomno"]; ?></td>
                         <td>
-                            <button type="button" class="btn btn-info" onclick="judgeChallenges(<?php echo $record['hunt_id']; ?>);">Judge</button>
+                            <?php if(!$record["judge_status"]){?>
+                                <button type="button" class="btn btn-primary" onclick="judgeChallenges(<?php echo $record['hunt_id']; ?>, <?php echo $record['gamecode_id']; ?>);"><i class="fa fa-gavel"></i> Judge</button>
+                            <?php }else{ ?>
+                                <a style="color:green;cursor:pointer;" onclick="judgeChallenges(<?php echo $record['hunt_id']; ?>, <?php echo $record['gamecode_id']; ?>);"><i class="fa fa-check"></i>Judged</a>
+                            <?php } ?>
                         </td>
                     </tr>
                     <?php
@@ -741,8 +751,8 @@
         //evt.currentTarget.className += " active";
     }
 
-    function judgeChallenges(huntId)
+    function judgeChallenges(huntId, gamecodeId)
     {
-        window.open("<?php echo base_url(); ?>judgeChallenges/" + huntId, "_blank");
+        window.open("<?php echo base_url(); ?>judgeChallenges/" + huntId + "/" + gamecodeId, "_blank");
     }
 </script>

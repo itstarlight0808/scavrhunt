@@ -67,20 +67,42 @@
                                     <h1>Hunt Game End</h1>
                                     <div class="post-info">
                                         <!-- Post Comments -->
-                                        <p><i class="fa fa-star-o"></i>Points in total</p>
+                                        <p><i class="fa fa-star-o"></i><?= $totalPoints->points ?> Points in total</p>
                                     </div>
                                     <div class="post-info">
                                         <!-- Post Comments -->
                                         <p><i class="fa fa-users"></i><?php echo $teamName; ?></p>
                                     </div>
                                 </div>
+                                <div class="team-leaderboard-container">
+                                    <table class="team-leaderboard-table">
+                                        <tr>
+                                            <th>Challenge Name</th>
+                                            <th>Expected Points</th>
+                                            <th>Earned points</th>
+                                            <th>Judged</th>
+                                        </tr>
+                                        <?php
+                                            for($i=0; $i<count($teamLeaderBoard); $i++){
+                                                $one = $teamLeaderBoard[$i];
+                                                $judge_icon = $one->status_id==2 ? "<i class='fa fa-check-circle judged-icon'></i>" : "<i class='fa fa-exclamation-circle awaiting-judge-icon'></i>";
+                                                echo "<tr>
+                                                        <td>$one->chg_name</td>
+                                                        <td align='center'>$one->points</td>
+                                                        <td align='center'>$one->earned_points</td>
+                                                        <td align='center'>$judge_icon</td>
+                                                     </tr>";
+                                            }
+                                        ?>
+                                    </table>
+                                </div>
                                 <div class="comments-block">
                                     <h3 class="text-center"></h3>
-                                    
+
                                     <hr>
                                     <!-- Comment -->
                                     <div class="comment media">
-                                        
+
                                     </div>
                                 </div>
                                 <hr>

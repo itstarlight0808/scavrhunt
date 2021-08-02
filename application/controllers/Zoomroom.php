@@ -234,6 +234,7 @@ class Zoomroom extends BaseController
             $k = 0;
             foreach ($judgeTeams as $record)
             {
+                $chgCount = $this->challenge_model->getChallengeCountByHunt($record->hunt_id);
                 $teamId = $this->hunt_model->getTeamIdByGameCodeId($record->gamecode_id);
                 $schoolname = "";
                 $teamname = "";
@@ -255,12 +256,14 @@ class Zoomroom extends BaseController
                         $roomno = $roomInfo->room_no;
                 }
                 $judgeTeamInfos[$k]["team_id"] = $teamId;
+                $judgeTeamInfos[$k]["gamecode_id"] = $record->gamecode_id;
                 $judgeTeamInfos[$k]["schoolname"] = $schoolname;
                 $judgeTeamInfos[$k]["teamname"] = $teamname;
                 $judgeTeamInfos[$k]["teamsize"] = $teamsize;
                 $judgeTeamInfos[$k]["samedevice"] = $samedevice;
                 $judgeTeamInfos[$k]["roomno"] = $roomno;
                 $judgeTeamInfos[$k]["hunt_id"] = $record->hunt_id;
+                $judgeTeamInfos[$k]["judge_status"] = $record->status < ($chgCount*2) ? 0 : 1;
                 $k++;
             }
 

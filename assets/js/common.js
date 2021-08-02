@@ -29,9 +29,22 @@ jQuery(document).ready(function(){
 		}
 	});
 
-	/*
-	jQuery(document).on("click", ".searchList", function(){
-		
-	});
-	*/
+	isJudgeGamesForCheck();
 });
+
+function isJudgeGamesForCheck(){
+	$.post(baseURL + "isJudgeGamesForCheck", function(res){
+		res = JSON.parse(res);
+		if(res.isExist){
+			$(".alert-body").append(`<h4>There are some games for waiting a judgement.</h4>`)
+			$(".alert-dlg").dialog({
+				title : "Warning",
+				modal : false,
+				closeOnEscape : true,
+				show : "fadeIn",
+				position: { my: 'right bottom', at: 'right bottom', of : window}
+			});
+			$(".ui-dialog-titlebar").prepend("<i class='fa fa-exclamation-triangle' style='float: left;margin-top: 4px;margin-right: 4px;'></i>")
+		}
+	});
+}

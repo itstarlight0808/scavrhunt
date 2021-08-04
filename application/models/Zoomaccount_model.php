@@ -28,7 +28,7 @@ class Zoomaccount_model extends CI_Model
         return $query->num_rows();
     }
 
-    function zoomAccountListing($searchText = '', $page, $segment)
+    function zoomAccountListing($searchText, $page, $segment)
     {
         if(!empty($searchText)) {
             $likeCriteria = "account_name LIKE '%".$searchText."%'";

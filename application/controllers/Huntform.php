@@ -323,8 +323,8 @@ class Huntform extends CI_Controller
         {
             $statusId = 2; // auto judged..
             $chgAnswer = $inpAnswer;
-            $arr_answers = explode(",", $challenge->puzzle_answer);
-            if (in_array($chgAnswer, $arr_answers))
+            $arr_answers = explode(";", strtolower($challenge->puzzle_answer));
+            if (in_array(strtolower($chgAnswer), $arr_answers))
                 $points = intval($challenge->points);
         }
         else

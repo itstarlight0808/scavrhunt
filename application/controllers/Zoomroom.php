@@ -97,6 +97,7 @@ class Zoomroom extends BaseController
             $m = 0;
             $time1 = strtotime(gmdate("Y-m-d H:i:s", time()-14400));
 
+            $schoolIds = array();
             $players = $this->player_model->getPlayersByZoomAccount($accountId);
             foreach ($players as $record2)
             {
@@ -186,7 +187,6 @@ class Zoomroom extends BaseController
             $data['roomTeams'] = $ret2;
             $data['newPlayers'] = implode(",", $newPlayers);
 
-            $schoolIds = array();
             $schools = $this->school_model->getSchoolsByAccount($accountId);
             $k = 0;
             foreach ($schools as $record)
@@ -227,8 +227,9 @@ class Zoomroom extends BaseController
                     $k++;
                 }
             }
-
-            $judgeTeams = $this->challenge_model->getTeamsForJudge($gameCodeIds, $huntIds);
+            $judgeTeams = array();
+            if(count($gameCodeIds) && count($huntIds))
+                $judgeTeams = $this->challenge_model->getTeamsForJudge($gameCodeIds, $huntIds);
 
             $judgeTeamInfos = array();
             $k = 0;

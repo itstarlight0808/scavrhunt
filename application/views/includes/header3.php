@@ -37,11 +37,9 @@
     <![endif]-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-    <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-
+    
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/libs/cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -58,20 +56,53 @@
     <script src="<?php echo base_url(); ?>assets/libs/jquery-timepicker-1.3.5/jquery.timepicker.js"></script>
     <link href="<?php echo base_url(); ?>assets/libs/jquery-timepicker-1.3.5/jquery.timepicker.css" rel="stylesheet">
 
-    <script src="<?php echo base_url(); ?>assets/js/common.js"></script>
+    <link href="<?php echo base_url(); ?>assets/libs/pieceofcake/css/common.css" rel="stylesheet">
+    <script>
+      $(document).ready(function(){
+        let p=3, n=9;
+        let m = n*n;
+        let html = "<style>";
+        for(let i=0; i<n; i++){
+          html += `.tile:nth-child(${n}n+${i+1}) { --x : ${i} }`;
+          html += `.tile:nth-child(n+${n*i+1}) { --y : ${i} }`;
+        }
+        html += "</style>";
+        html += `<div class="cube" style="--n : ${n}">`;
+        for(let i=0; i<p; i++){
+          html += `<div class="face" style="${i < p-1 ? "--f:"+i : null}">`;
+          for(let j=0; j<m; j++)
+            html += "<div class='tile'></div>";
+          html += "</div>";
+        }
+        html += "</div>";
+        $(".animated-box").html(html);
+      });
+    </script>
   </head>
   <body class="hold-transition skin-blue sidebar-mini">
-    <div class="alert-dlg" hidden>
+    <div class="dot-1 d-none d-lg-block">
+      <img src="<?php echo base_url(); ?>assets/images/dot-big.png" alt="banner">           
     </div>
+    <div class="dot-2 d-none d-lg-block">
+      <img src="<?php echo base_url(); ?>assets/images/dot-big.png" alt="banner">
+    </div>
+    <div class="dot-3">
+      <img src="<?php echo base_url(); ?>assets/images/dot-sm.png" alt="banner">           
+    </div>
+    <div class="dot-4">
+      <img src="<?php echo base_url(); ?>assets/images/dot-sm.png" alt="banner">
+    </div>
+
     <div class="wrapper">
-      
+      <div class="animated-box">
+      </div>
       <header class="main-header">
         <!-- Logo -->
-        <a href="<?php echo base_url(); ?>admin" class="logo">
+        <a href="<?php echo base_url(); ?>" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>TB</b></span>
+          <span class="logo-mini"><b>SH</b></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>Team Building</b></span>
+          <span class="logo-lg"><b>Scavenger Hunt</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
@@ -82,18 +113,23 @@
           <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
               <li class="dropdown tasks-menu">
+                <a class="nav-link" href="<?php echo base_url(); ?>">
+                    <span class="link-label">Scavenger Hunt</span>
+                </a>
+              </li>
+              <li class="dropdown tasks-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                   <i class="fa fa-history"></i>
                 </a>
                 <ul class="dropdown-menu">
-                  <li class="header"> Last Login : <i class="fa fa-clock-o"></i> <?= empty($last_login) ? "First Time Login" : $last_login; ?></li>
+                  <li class="header"><i class="fa fa-clock-o"></i> <?= empty($last_login) ? "First Time Login" : "Last Login : $last_login"; ?></li>
                 </ul>
               </li>
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="<?php echo base_url(); ?>assets/dist/img/avatar.png" class="user-image" alt="User Image"/>
-                  <span class="hidden-xs"><?php echo $name; ?></span>
+                  <span class="hidden-xs"><?php echo isset($name) ? $name : ''; ?></span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- User image -->
@@ -101,8 +137,8 @@
                     
                     <img src="<?php echo base_url(); ?>assets/dist/img/avatar.png" class="img-circle" alt="User Image" />
                     <p>
-                      <?php echo $name; ?>
-                      <small><?php echo $role_text; ?></small>
+                      <?php echo isset($name) ? $name : ""; ?>
+                      <small><?php echo isset($role_text) ? $role_text : ""; ?></small>
                     </p>
                     
                   </li>
@@ -127,133 +163,26 @@
         <section class="sidebar">
           <!-- sidebar menu: : style can be found in sidebar.less -->
           <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">MAIN NAVIGATION</li>
-            <!--
-            <li>
-              <a href="<?php echo base_url(); ?>dashboard">
-                <i class="fa fa-dashboard"></i> <span>Dashboard</span></i>
-              </a>
-            </li>
-            <li>
-              <a href="#" >
-                <i class="fa fa-plane"></i>
-                <span>New Task</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" >
-                <i class="fa fa-ticket"></i>
-                <span>My Tasks</span>
-              </a>
-            </li>
-
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-share"></i> <span>Multilevel</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-                <li class="treeview">
-                  <a href="#"><i class="fa fa-circle-o"></i> Level One
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
-                  <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
-                    <li class="treeview">
-                      <a href="#"><i class="fa fa-circle-o"></i> Level Two
-                        <span class="pull-right-container">
-                          <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                      </a>
-                      <ul class="treeview-menu">
-                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                      </ul>
-                    </li>
-                  </ul>
-                </li>
-                <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-              </ul>
-            </li>
-            -->
+            <li class="header">HUNT NAVIGATION</li>
             <?php
-            if($role == ROLE_ADMIN || $role == ROLE_GAMEMASTER)
-            {
+            //if($role == ROLE_ADMIN || $role == ROLE_GAMEMASTER)
+            //{
             ?>
             <li>
-              <a href="<?php echo base_url(); ?>userListing">
+              <a href="<?php echo base_url(); ?>">
                 <i class="fa fa-users"></i>
-                <span>Users</span>
+                <span>My Team / Play In</span>
               </a>
             </li>
             <li>
-              <a href="<?php echo base_url(); ?>" >
+              <a href="<?php echo base_url(); ?>leaderboard" >
                 <i class="fa fa-files-o"></i>
                 <span>Leaderboard / Highlight Reel</span>
               </a>
             </li>
-            <li>
-              <a href="<?php echo base_url(); ?>zoomAccountListing" >
-                <i class="fa fa-files-o"></i>
-                <span>Zoom Accounts</span>
-              </a>
-            </li>
-            <li class="treeview menu-open">
-              <a href="#" >
-                <i class="fa fa-files-o"></i>
-                <span>Zoom Rooms</span>
-                <?php
-                if (isset($allZoomAccounts) && count($allZoomAccounts) > 0)
-                {
-                ?>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-                <?php
-                }
-                ?>
-              </a>
-              <ul class="treeview-menu" style="display:block;">
-                <?php
-                if (isset($allZoomAccounts) && count($allZoomAccounts) > 0)
-                {
-                  foreach ($allZoomAccounts as $k => $record)
-                  {
-                ?>
-                    <li><a href="<?php echo base_url(); ?>zoomRoomListing/<?php echo $record->id . "/" . ($k+1) ?>"><i class="fa fa-circle-o"></i>Zoom Account <?php echo ($k+1) . "<br><center>(" . $record->account_name . ")</center>" ?></a></li>
-                <?php
-                  }
-                }
-                ?>
-              </ul>
-            </li>
-            <li>
-              <a href="<?php echo base_url(); ?>schoolListing" >
-                <i class="fa fa-files-o"></i>
-                <span>Schools</span>
-              </a>
-            </li>
-            <li>
-              <a href="<?php echo base_url(); ?>groupListing" >
-                <i class="fa fa-files-o"></i>
-                <span>Groups</span>
-              </a>
-            </li>
             <?php
-            }
+            //}
             ?>
-            <li>
-              <a href="<?php echo base_url(); ?>manageHunt/0" >
-                <i class="fa fa-files-o"></i>
-                <span>Hunt Management</span>
-              </a>
-            </li>
-            
           </ul>
         </section>
         <!-- /.sidebar -->

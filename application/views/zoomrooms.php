@@ -1,6 +1,10 @@
 <head>
     <meta http-equiv="refresh" content="60">
     <style>
+        .judge-btn {
+            margin : 10px;
+            font-size : 20px;
+        }
         /* Style the tab */
         .tab {
             overflow: hidden;
@@ -41,21 +45,21 @@
         border-top: none;
         }
 
-        #roomTable, #roomTable2{
+        #roomTable, #roomTable2 {
             background-color: darkblue;
             color: white;
         }
-        #roomTable tbody tr td:hover{
+        #roomTable tbody tr td:hover {
             background-color: white;
             color: darkblue;
             border: 3px solid white;
         }
-        #roomTable2 tbody tr td:hover{
+        #roomTable2 tbody tr td:hover {
             background-color: white;
             color: darkblue;
             border: 3px solid white;
         }
-        #myTable tbody tr td, #myTable2 tbody tr td, #roomTable tbody tr td{
+        #myTable tbody tr td, #myTable2 tbody tr td, #roomTable tbody tr td {
             vertical-align: middle;
         }
         a:hover {
@@ -71,6 +75,9 @@
       </h1>
     </section>
     <section class="content" id="section_content">
+        <div align="center">
+            <button class="btn btn-info judge-btn" onclick=""><i class="fa fa-gavel"></i> Judge</button>
+        </div>
         <div class="tab" id="roomTabbar">
             <button class="tablinks" onclick="openRoomTab(event, 'divZoomRooms')">Zoom Room</button>
             <button class="tablinks" onclick="openRoomTab(event, 'divScavrHunts')">Scavenger Hunt</button>

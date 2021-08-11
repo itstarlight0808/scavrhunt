@@ -1,5 +1,6 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
+require APPPATH . '/libraries/BaseController.php';
 /**
  * Class : Entryform (Entryform Controller)
  * Entryform class to control to authenticate user credentials and starts user's session.
@@ -7,7 +8,7 @@
  * @version : 1.1
  * @since : 25 February 2021
  */
-class Entryform extends CI_Controller
+class Entryform extends BaseController
 {
     /**
      * This is default constructor of the class
@@ -44,10 +45,11 @@ class Entryform extends CI_Controller
             $strStdIdRequired = implode("^", $arrStdIdRequired);
         }
 
+        $this->global['pageTitle'] = "Team Building | Admin System Log in";
         $data['curSchoolId'] = $curSchoolId;
         $data['allSchools'] = $allSchools;
         $data['stdIdRequired'] = $strStdIdRequired;
-        $this->load->view("entryform.php", $data);
+        $this->loadViews3("entryform.php", $this->global, $data, NULL);
     }
 
     public function searchTeam($step = 1)
@@ -139,20 +141,17 @@ class Entryform extends CI_Controller
         }
         
         $data["matchTeams"] = $result;
-
+        $this->global['pageTitle'] = "Team Building | Selecting a Team";
         if ($step == 2)
-        {
-            $this->load->view("matchteams1.php", $data);
-        }
-            
+            $this->loadViews3("matchteams1.php", $this->global, $data, null);
         if ($step == 3)
-            $this->load->view("matchteams2.php", $data);
+            $this->loadViews3("matchteams2.php", $this->global, $data, null);
         if ($step == 4)
         {
             if (count($result) == 0)
                 $this->assignRoom($data["playerId"], "0", $data);
             else
-                $this->load->view("matchteams3.php", $data);
+                $this->loadViews3("matchteams3.php", $this->global, $data, null);
         }    
 
     }
@@ -305,9 +304,10 @@ class Entryform extends CI_Controller
             }
         }
 
+        $this->global['pageTitle'] = "Team Building | Room Assignment";
         $data["roomMates"] = $ret;
         $data["teamId"] = $selTeamId;
-        $this->load->view("assignedroom.php", $data);
+        $this->loadViews3("assignedroom.php", $this->global, $data, null);
     }
 
 }

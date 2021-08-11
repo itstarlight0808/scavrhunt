@@ -415,6 +415,7 @@ a:focus {
   padding-top: 50px;
   min-height: 100%;
   width: 230px;
+  border : 2px solid white;
   z-index: 810;
   -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
   -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
@@ -3268,7 +3269,7 @@ table.text-center th {
  */
 
  .assignedroom-box {
-  width: 600px;
+  width: 90%;
   margin: 5% auto;
 }
 @media (max-width: 600px) {

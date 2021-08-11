@@ -149,12 +149,6 @@
                 <span>Challenges Data Bank</span>
               </a>
             </li>
-            <li>
-              <a href="javascript:void(0)" >
-                <i class="fa fa-files-o"></i>
-                <span>Highlight Reel</span>
-              </a>
-            </li>
             <?php
             //}
             ?>

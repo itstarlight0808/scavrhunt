@@ -1,5 +1,5 @@
 <head>
-    <meta http-equiv="refresh" content="60">
+    <meta http-equiv="refresh" content="120">
     <style>
         .judge-btn {
             margin : 10px;
@@ -76,7 +76,7 @@
     </section>
     <section class="content" id="section_content">
         <div align="center">
-            <button class="btn btn-info judge-btn" onclick=""><i class="fa fa-gavel"></i> Judge</button>
+            <button class="btn btn-info judge-btn" onclick="openJudgeDialog()"><i class="fa fa-gavel"></i> Judge</button>
         </div>
         <div class="tab" id="roomTabbar">
             <button class="tablinks" onclick="openRoomTab(event, 'divZoomRooms')">Zoom Room</button>

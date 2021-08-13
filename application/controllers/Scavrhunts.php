@@ -28,10 +28,14 @@ class Scavrhunts extends BaseController
     }
     public function isJudgeGamesForCheck(){
         $res = $this->challenge_model->isJudgeGamesForCheck();
-        if(count($res) > 0)
+        if(intval($res[0]->count) > 0)
             echo json_encode(array('isExist'=>1));
         else
             echo json_encode(array("isExist"=>0));
+    }
+    public function getOldestSubmittedChallenge(){
+        $res = $this->challenge_model->getOldestSubmittedChallenge();
+        echo json_encode(["data" => $res]);
     }
     public function manage($schoolId)
     {

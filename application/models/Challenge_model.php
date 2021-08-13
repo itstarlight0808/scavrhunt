@@ -122,6 +122,20 @@ class Challenge_model extends CI_Model
 
         return $query->result();
     }
+    public function getOldestSubmittedChallenge(){
+        $this->db->select("ju.id, ju.chg_id, ju.chg_result, ju.submitted, chg.chg_name, chg.chg_type_id AS chg_type, chg.puzzle_page, chg.points, teams.team_name");
+        $this->db->from($this->_tablename3." AS ju");
+        $this->db->join($this->_tablename." AS chg", "ju.chg_id = chg.id", "LEFT");
+        $this->db->join("hunt_gamecode AS gm", "ju.gamecode_id = gm.id", "LEFT");
+        $this->db->join("teams", "gm.team_id = teams.id", "LEFT");
+        $this->db->where("ju.status_id = 1");
+        $this->db->order_by("ju.submitted ASC");
+        $this->db->limit(1, 0);
+        $query = $this->db->get();
+        $a = $this->db->last_query();
+        
+        return $query->row();
+    }
     public function getSubmittedResults($huntId, $gamecodeId, $challengeId)
     {
         $this->db->where('hunt_id', $huntId);

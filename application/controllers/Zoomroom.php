@@ -66,7 +66,7 @@ class Zoomroom extends BaseController
 
             $ret = array();
             $k = 0;
-            
+ 
             for ($k=0; $k<50; $k++)
             {
                 $roomSchoolIds[$k] = 0;

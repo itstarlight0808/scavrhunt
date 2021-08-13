@@ -5025,3 +5025,46 @@ table.text-center th {
     white-space: normal !important;
   }
 }
+
+/*** Judge Dialog CUSTOM CSS ***/
+.challengeInfo-div .title {
+  font-size: 25px;
+  font-weight: 900;
+  color: #2dbba4;
+}
+.challengeInfo-div .description {
+  margin : 10px 0px;
+  border: 3px solid #2eca2e;
+  padding: 25px 10px;
+  border-radius: 3px;
+}
+.teamInfo-div h3{
+  text-shadow: 1px 1px 2px #353535;
+  font-weight: 900;
+  color: #252525;
+}
+table.submittedInfo-div {
+  font-size: 16px;
+  font-weight: 600;
+}
+table.submittedInfo-div td {
+  padding : 5px;
+}
+table.submittedInfo-div td i[class*="fa"]{
+  color : #2dbba4;
+}
+.controlDiv {
+  display : flex;
+  justify-content : center;
+  margin-top : 20px;
+}
+.controlDiv button {
+  font-size : 1.5em !important;
+}
+.successDiv {
+  color :  #2dbba4;
+  height : 400px;
+  display : flex;
+  align-items : center;
+  justify-content: center;
+}

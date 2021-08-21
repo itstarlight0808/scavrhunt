@@ -25,7 +25,8 @@ li.challenge-number span{
     left: 0px;
     top: 40%;
     z-index: 100;
-    font-size: 60pt;
+    font-size: 55pt;
+    font-family : 'Paytone One',sans-serif;
 }
 
 li.challenge-number span.solved{

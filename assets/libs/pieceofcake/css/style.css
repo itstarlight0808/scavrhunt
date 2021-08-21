@@ -221,6 +221,12 @@ a:focus {text-decoration: none;}
 	width:100%;
 	border:0px;
 	top: 0px;
+	display: flex;
+    align-items: center;
+    padding: 0px 50px;
+    font-size: 20px;
+    color: white;
+    font-family: 'Paytone One',sans-serif;
 	transition: all 0.7s ease-in-out;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.10);
 }
@@ -1124,7 +1130,8 @@ ul.slider-pagi {padding-left:0px;}
 ============================ */
 
 footer {
-	padding: 50px 10px;
+	margin-top: 100px;
+    padding: 5px 10px;
 	background-image:url(../img/border.png);
 	background-position:bottom;
 	background-repeat:repeat-x;

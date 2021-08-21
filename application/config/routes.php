@@ -124,6 +124,7 @@ $route['deleteSchool'] = "school/deleteSchool";
 $route['searchTeam'] = 'entryform/searchTeam';
 $route['searchTeam/(:any)'] = 'entryform/searchTeam/$1';
 $route['selectTeam'] = 'entryform/selectTeam';
+$route['canRegisterForHunt'] = "entryform/canRegisterForHunt";
 
 $route['groupListing'] = 'zoomgroup/groupListing';
 $route['groupListing/(:any)'] = 'zoomgroup/groupListing/$1';

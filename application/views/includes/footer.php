@@ -2,7 +2,7 @@
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          <b>Team Building</b> &nbsp;&nbsp;&nbsp;Virtual Escape Room Software | Version 1.0
+          <b>Team Building</b> &nbsp;&nbsp;&nbsp;Admin Software | Version 1.0
         </div>
         <strong>Copyright &copy; 2021 Virtual Escape Room Fun, LLC.</strong> &nbsp;&nbsp;&nbsp;All rights reserved.
     </footer>

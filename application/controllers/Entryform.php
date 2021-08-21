@@ -1,6 +1,5 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . '/libraries/BaseController.php';
 /**
  * Class : Entryform (Entryform Controller)
  * Entryform class to control to authenticate user credentials and starts user's session.
@@ -8,7 +7,7 @@ require APPPATH . '/libraries/BaseController.php';
  * @version : 1.1
  * @since : 25 February 2021
  */
-class Entryform extends BaseController
+class Entryform extends CI_Controller
 {
     /**
      * This is default constructor of the class
@@ -20,6 +19,7 @@ class Entryform extends BaseController
         $this->load->model('school_model');
         $this->load->model('team_model');
         $this->load->model('room_model');
+        $this->load->model('hunt_model');
         //$this->load->model('Entryform_model');
         date_default_timezone_set('US/Eastern');
     }
@@ -45,21 +45,84 @@ class Entryform extends BaseController
             $strStdIdRequired = implode("^", $arrStdIdRequired);
         }
 
-        $this->global['pageTitle'] = "Team Building | Admin System Log in";
         $data['curSchoolId'] = $curSchoolId;
         $data['allSchools'] = $allSchools;
         $data['stdIdRequired'] = $strStdIdRequired;
-        $this->loadViews3("entryform.php", $this->global, $data, NULL);
+        $this->load->view("entryform.php", $data);
     }
 
+    public function canRegisterForHunt() {
+        $schoolId = $_REQUEST["schoolId"];
+        $recentHunts = $this->hunt_model->getActiveHuntsSortedByDate($schoolId);
+        if(!count($recentHunts)){
+            echo json_encode(["status" => 0, "msg" => "No Available Hunts!"]);
+            return;
+        }
+        $hunt = $recentHunts[0];
+        $curDate = date("Y-m-d");
+        $curTime = date("H:i:s");
+
+        if($curDate < $hunt->start_date){
+            echo json_encode(
+                [
+                    "status" => 0,
+                    "msg" => "Current Time : ".$curDate." ".$curTime
+                             ."<br>New Hunt Game will be started from ".$hunt->start_date." ". $hunt->start_time
+            ]);
+            return;
+        }
+        if($curDate == $hunt->start_date){
+            $curTimeStamp = explode(":", $curTime);
+            $curTimeStamp = intval($curTimeStamp[0])*3600+intval($curTimeStamp[1])*60+intval($curTimeStamp[2]);
+            $startTimeStamp = explode(":", $hunt->start_time);
+            $startTimeStamp = intval($startTimeStamp[0])*3600+intval($startTimeStamp[1])*60+intval($startTimeStamp[2]);
+            $offset = $startTimeStamp - $curTimeStamp ;
+            if(floor($offset/60) > 30){ // team/player can register the new hunt before 30 mins
+                echo json_encode(
+                    [
+                        "status" => 0,
+                        "msg" => "Current Time : ".$curDate." ".$curTime
+                                 ."<br>New Hunt Game will be started from ".$hunt->start_date." ". $hunt->start_time
+                ]);
+                return;
+            }
+        }
+        echo json_encode(["status" => 1, "msg" => ""]);
+    }
     public function searchTeam($step = 1)
     {
         //$created = gmdate('Y-m-d H:i:s', time()-14400);
+        $schoolId = $this->security->xss_clean($this->input->post('schoolId'));
+        $this->session->set_userdata('schoolId', $schoolId);
+
+        $recentHunts = $this->hunt_model->getActiveHuntsSortedByDate($schoolId);
+        $hunt = $recentHunts[0];
+        $curDate = date("Y-m-d");
+        $curTime = date("H:i:s");
+
+        $curTimeStamp = explode(":", $curTime);
+        $curTimeStamp = intval($curTimeStamp[0])*3600+intval($curTimeStamp[1])*60+intval($curTimeStamp[2]);
+        $startTimeStamp = explode(":", $hunt->start_time);
+        $startTimeStamp = intval($startTimeStamp[0])*3600+intval($startTimeStamp[1])*60+intval($startTimeStamp[2]);
+        $endTimeStamp = explode(":", $hunt->end_time);
+        $endTimeStamp = intval($endTimeStamp[0])*3600+intval($endTimeStamp[1])*60+intval($endTimeStamp[2]);
+
+        $remainTime = $startTimeStamp - $curTimeStamp;
+        if($curDate == $hunt->start_date && $remainTime > 0)
+            $data["hunt_status"] = "Ready";
+        if(($curDate == $hunt->start_date && $remainTime <= 0) || $curDate > $hunt->start_date){
+            $data["hunt_status"] = "Started";
+            $remainTime = $endTimeStamp - $curTimeStamp;
+        }
+        if(($curDate > $hunt->end_date) || ($curDate == $hunt->end_date && $remainTime < 0))
+            $data["hunt_status"] = "Ended";
+        $data["remainTime"] = $remainTime;
+        $data["huntInfo"] = $hunt;
+
         $created = date('Y-m-d H:i:s');
         $fullname = $this->security->xss_clean($this->input->post('fullname'));
         $email = $this->security->xss_clean($this->input->post('email'));
         $stdId = $this->security->xss_clean($this->input->post('studentId'));
-        $schoolId = $this->security->xss_clean($this->input->post('schoolId'));
 
         $school = $this->school_model->getSchoolInfo($schoolId);
         $zoomAccountId = $school->zoom_account_id;
@@ -141,23 +204,51 @@ class Entryform extends BaseController
         }
         
         $data["matchTeams"] = $result;
-        $this->global['pageTitle'] = "Team Building | Selecting a Team";
+        if(count($result) == 1){
+            $this->assignRoom($data["playerId"], $result[0]->id, $data);
+            return;
+        }
         if ($step == 2)
-            $this->loadViews3("matchteams1.php", $this->global, $data, null);
+            $this->load->view("matchteams1.php", $data);
         if ($step == 3)
-            $this->loadViews3("matchteams2.php", $this->global, $data, null);
+            $this->load->view("matchteams2.php", $data);
         if ($step == 4)
         {
             if (count($result) == 0)
                 $this->assignRoom($data["playerId"], "0", $data);
             else
-                $this->loadViews3("matchteams3.php", $this->global, $data, null);
-        }    
-
+                $this->load->view("matchteams3.php", $data);
+        }
     }
 
     public function selectTeam()
     {
+        $schoolId = $this->session->userdata('schoolId');
+
+        $recentHunts = $this->hunt_model->getActiveHuntsSortedByDate($schoolId);
+        $hunt = $recentHunts[0];
+        $curDate = date("Y-m-d");
+        $curTime = date("H:i:s");
+
+        $curTimeStamp = explode(":", $curTime);
+        $curTimeStamp = intval($curTimeStamp[0])*3600+intval($curTimeStamp[1])*60+intval($curTimeStamp[2]);
+        $startTimeStamp = explode(":", $hunt->start_time);
+        $startTimeStamp = intval($startTimeStamp[0])*3600+intval($startTimeStamp[1])*60+intval($startTimeStamp[2]);
+        $endTimeStamp = explode(":", $hunt->end_time);
+        $endTimeStamp = intval($endTimeStamp[0])*3600+intval($endTimeStamp[1])*60+intval($endTimeStamp[2]);
+
+        $remainTime = $startTimeStamp - $curTimeStamp;
+        if($curDate == $hunt->start_date && $remainTime > 0)
+            $data["hunt_status"] = "Ready";
+        if(($curDate == $hunt->start_date && $remainTime <= 0) || $curDate > $hunt->start_date){
+            $data["hunt_status"] = "Started";
+            $remainTime = $endTimeStamp - $curTimeStamp;
+        }
+        if(($curDate > $hunt->end_date) || ($curDate == $hunt->end_date && $remainTime < 0))
+            $data["hunt_status"] = "Ended";
+        $data["remainTime"] = $remainTime;
+        $data["huntInfo"] = $hunt;
+
         $playerId = $this->security->xss_clean($this->input->post('playerId'));
         $selTeamId = $this->security->xss_clean($this->input->post('selTeamId'));
         
@@ -298,16 +389,15 @@ class Entryform extends BaseController
                     $ret[$k]["teamname"] = $teamInfo->team_name;
                     $ret[$k]["captain"] = $teamInfo->captain;
                     $ret[$k]["roomno"] = $roomInfo->room_no;
-                    $ret[$k]["gamelink"] = $school->zoom_link;
+                    $ret[$k]["gamelink"] = base_url()."gotoHunt/?hunt=".$data["huntInfo"]->id;
                     $k++;
                 }
             }
         }
 
-        $this->global['pageTitle'] = "Team Building | Room Assignment";
         $data["roomMates"] = $ret;
         $data["teamId"] = $selTeamId;
-        $this->loadViews3("assignedroom.php", $this->global, $data, null);
+        $this->load->view("assignedroom.php", $data);
     }
 
 }

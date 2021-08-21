@@ -194,12 +194,6 @@
               </a>
             </li>
             <li>
-              <a href="<?php echo base_url(); ?>" >
-                <i class="fa fa-files-o"></i>
-                <span>Leaderboard / Highlight Reel</span>
-              </a>
-            </li>
-            <li>
               <a href="<?php echo base_url(); ?>zoomAccountListing" >
                 <i class="fa fa-files-o"></i>
                 <span>Zoom Accounts</span>

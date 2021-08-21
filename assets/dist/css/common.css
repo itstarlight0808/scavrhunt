@@ -1,0 +1,7 @@
+.alert-dlg {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    font-size: 16px;
+    z-index : 999;
+}

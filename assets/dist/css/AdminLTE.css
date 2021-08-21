@@ -3254,12 +3254,12 @@ table.text-center th {
 
 .selteam-box {
   width: 600px;
-  margin: 5% auto;
+  margin: 12% auto;
 }
 @media (max-width: 600px) {
   .selteam-box {
     width: 90%;
-    margin-top: 20px;
+    margin-top: 100px;
   }
 }
 
@@ -3270,12 +3270,12 @@ table.text-center th {
 
  .assignedroom-box {
   width: 90%;
-  margin: 5% auto;
+  margin: 12% auto;
 }
 @media (max-width: 600px) {
   .assignedroom-box {
     width: 90%;
-    margin-top: 20px;
+    margin-top: 100px;
   }
 }
 

@@ -42,7 +42,9 @@
     </head>
     <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
         <nav class="navbar navbar-custom navbar-fixed-top"  id="navbar-custom">
-
+            <div>
+                <?php echo $huntInfo->sch_name." - ".$huntInfo->hunt_name; ?>
+            </div>
         </nav>
         <!-- Preloader -->
         <div id="loading">
@@ -192,16 +194,14 @@
                 </div>
                 <!-- Footer -->
                 <footer class="color-section">
-                    <div class="container">
-                        <div class="row margin-footer">
-                            <!-- /col-lg-4 -->
-                            <div class="col-md-12 text-center">
-                                <p>Copyright © 2021 - 2022 / Designed by Jason Bock</p>
-                                <!-- /container -->
-                                <!-- Go To Top Link -->
-                                <div class="page-scroll hidden-sm hidden-xs">
-                                    <a href="#page-top" class="back-to-top"><i class="fa fa-angle-up"></i></a>
-                                </div>
+                    <div class="row">
+                        <!-- /col-lg-4 -->
+                        <div class="col-md-12 text-center">
+                            <p style="margin:10px;">Copyright © 2021 Virtual Escape Attractions, LLC.</p>
+                            <!-- /container -->
+                            <!-- Go To Top Link -->
+                            <div class="page-scroll hidden-sm hidden-xs">
+                                <a href="#page-top" class="back-to-top"><i class="fa fa-angle-up"></i></a>
                             </div>
                         </div>
                     </div>

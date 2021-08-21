@@ -37,8 +37,11 @@ class Hunt_model extends CI_Model
 
     public function getHuntInfo($huntId)
     {
-        $this->db->where('id', $huntId);
-        $query = $this->db->get($this->_tablename);
+        $this->db->select("hunt_infos.*, sch.sch_name");
+        $this->db->from($this->_tablename);
+        $this->db->join("schools as sch", "sch.id = hunt_infos.school_id", "LEFT");
+        $this->db->where('hunt_infos.id', $huntId);
+        $query = $this->db->get();
         return $query->row();
     }
 
@@ -58,7 +61,18 @@ class Hunt_model extends CI_Model
         $query = $this->db->get($this->_tablename);
         return $query->result();
     }
+    public function getActiveHuntsSortedByDate($schoolId) {
+        $this->db->select("id, school_id, start_date, start_time, end_date, end_time");
+        $this->db->from($this->_tablename);
+        $this->db->where("is_active = 1");
+        $this->db->where("status_id != 4");
+        $this->db->where("school_id = $schoolId");
+        $this->db->order_by("start_date DESC");
+        $this->db->limit(1, 0);
 
+        $query = $this->db->get();
+        return $query->result();
+    }
     public function insertHunt($huntInfo)
     {
         $this->db->trans_start();

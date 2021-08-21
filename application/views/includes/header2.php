@@ -149,6 +149,18 @@
                 <span>Challenges Data Bank</span>
               </a>
             </li>
+            <li>
+              <a href="<?php echo base_url(); ?>leaderboard/<?php echo $huntId; ?>" >
+                <i class="fa fa-files-o"></i>
+                <span>LeaderBoard</span>
+              </a>
+            </li>
+            <li>
+              <a href="<?php echo base_url(); ?>highlightReel/<?php echo $huntId; ?>" >
+                <i class="fa fa-files-o"></i>
+                <span>Highlight Reel</span>
+              </a>
+            </li>
             <?php
             //}
             ?>

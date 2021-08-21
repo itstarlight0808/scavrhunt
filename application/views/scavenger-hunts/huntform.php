@@ -26,6 +26,7 @@
 
         <!-- Own Style -->
         <link href="<?php echo base_url(); ?>assets/libs/pieceofcake/css/challenge-ui.css" rel="stylesheet">
+        <link href="<?php echo base_url(); ?>assets/dist/css/common.css" rel="stylesheet">
 
         <!-- Core JavaScript Files -->
         <script src="<?php echo base_url(); ?>assets/libs/pieceofcake/js/jquery.min.js"></script>
@@ -38,11 +39,15 @@
         <script src="<?php echo base_url(); ?>assets/libs/pieceofcake/js/prefixfree.js"></script>
 
         <script src="<?php echo base_url(); ?>assets/libs/cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
+        <script src="<?php echo base_url(); ?>assets/js/FE_common.js"></script>
         
     </head>
     <body id="page-top" data-spy="scroll" data-target=".navbar-custom">
         <nav class="navbar navbar-custom navbar-fixed-top"  id="navbar-custom">
-
+            <div>
+                <?php echo $huntInfo->sch_name." - ".$huntInfo->hunt_name; ?>
+            </div>
         </nav>
         <!-- Preloader -->
         <div id="loading">
@@ -234,9 +239,10 @@
                                     <?php
                                         for($i=0; $i<count($leaderBoard); $i++){ 
                                             $one = $leaderBoard[$i];
+                                            $number = $i+1;
                                             echo "<div>
                                                     <span>
-                                                        $i. $one->team_name .... $one->points
+                                                        $number. $one->team_name .... $one->points
                                                     </span>
                                                 </div>";
                                         }
@@ -248,16 +254,14 @@
                 </div>
                 <!-- Footer -->
                 <footer class="color-section">
-                    <div class="container">
-                        <div class="row margin-footer">
-                            <!-- /col-lg-4 -->
-                            <div class="col-md-12 text-center">
-                                <p>Copyright © 2021 - 2022 / Designed by Jason Bock</p>
-                                <!-- /container -->
-                                <!-- Go To Top Link -->
-                                <div class="page-scroll hidden-sm hidden-xs">
-                                    <a href="#page-top" class="back-to-top"><i class="fa fa-angle-up"></i></a>
-                                </div>
+                    <div class="row">
+                        <!-- /col-lg-4 -->
+                        <div class="col-md-12 text-center">
+                            <p style="margin:10px;">Copyright © 2021 Virtual Escape Attractions, LLC.</p>
+                            <!-- /container -->
+                            <!-- Go To Top Link -->
+                            <div class="page-scroll hidden-sm hidden-xs">
+                                <a href="#page-top" class="back-to-top"><i class="fa fa-angle-up"></i></a>
                             </div>
                         </div>
                     </div>
@@ -343,8 +347,16 @@
             }, 
             function(res)
             {
-                //if (res == "success")
-                    gotoNextChallenge();       
+                res = JSON.parse(res);
+                if(res.chgType == 2 || res.chgType == 3) {
+                    let msg = res.points ? "Correct Answer!" : "Wrong Answer!";
+                    displaySuccess(res.points ? 1 : 0, msg);
+                }
+                else{
+                    let msg = "This challenge needs to be judged!";
+                    displaySuccess(0, msg);
+                }
+                setTimeout(gotoNextChallenge, 3000);
             }
         );
         

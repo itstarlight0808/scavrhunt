@@ -1,15 +1,32 @@
 <!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Scavenger Hunt</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <link href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url(); ?>assets/dist/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url(); ?>assets/dist/css/common.css" rel="stylesheet" type="text/css" />
+        <script src="<?php echo base_url(); ?>assets/js/FE_common.js" type="text/javascript"></script>
 
-    <link href="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="<?php echo base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-
-    <style>
-        .error_Msg{ 
-            color:#fa4b2a; 
-            padding-left: 10px; 
-        } 
-    </style>
-    <div class="content-wrapper">
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <!-- Google Font -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        <style>
+            .error_Msg{ 
+                color:#fa4b2a; 
+                padding-left: 10px; 
+            } 
+        </style>
+    </head>
+    <body class="hold-transition login-page">
         <div class="entryform-box">
             <div class="login-box-body">
             <h1><p class="login-box-msg" id="entryTitle">Player entry form for </p></h1>
@@ -81,12 +98,12 @@
                             </label>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    &nbsp;&nbsp;&nbsp;<input type="radio" class="form-check-input" name="samedevice" value="1">&nbsp;&nbsp;&nbsp;Yes
+                                    &nbsp;&nbsp;&nbsp;<input type="radio" class="form-check-input" name="samedevice" value="1">&nbsp;&nbsp;&nbsp;Altogether
                                 </label>
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    &nbsp;&nbsp;&nbsp;<input type="radio" class="form-check-input" name="samedevice" value="0" checked>&nbsp;&nbsp;&nbsp;No
+                                    &nbsp;&nbsp;&nbsp;<input type="radio" class="form-check-input" name="samedevice" value="0" checked>&nbsp;&nbsp;&nbsp;Zoom
                                 </label>
                             </div>
                         </div>
@@ -140,7 +157,8 @@
                 
             </div><!-- /.login-box-body -->
         </div><!-- /.login-box -->
-    </div>
+    </body>
+</html>
 <script src="<?php echo base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
@@ -264,6 +282,25 @@
                 $("#teammembers").val(teammembers);
             }
             
+            let result;
+            $.ajax({
+                url : "<?php echo base_url(); ?>canRegisterForHunt",
+                type : 'post',
+                async : false,
+                data : {schoolId : $("#selSchoolId").val()},
+                success : function(res) {
+                    res = JSON.parse(res);
+                    result = res;
+                },
+                error : function(res, err) {
+                    console.log(err);
+                }
+            });
+            if(!result.status){
+                displayError(result.msg);
+                return;
+            }
+
             form.attr("action", "<?php echo base_url(); ?>searchTeam/1");
             form.submit();
         });
@@ -300,7 +337,6 @@
         else
             jQuery("#stdId_info").show();
         $("#schoolId").val($("#selSchoolId").val());
-        $("#selSchoolId").attr("disabled", "disabled");
     }
 
 </script>

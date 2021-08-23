@@ -20,6 +20,7 @@ class Entryform extends CI_Controller
         $this->load->model('team_model');
         $this->load->model('room_model');
         $this->load->model('hunt_model');
+        $this->load->model('common_model');
         //$this->load->model('Entryform_model');
         date_default_timezone_set('US/Eastern');
     }
@@ -59,33 +60,18 @@ class Entryform extends CI_Controller
             return;
         }
         $hunt = $recentHunts[0];
-        $curDate = date("Y-m-d");
-        $curTime = date("H:i:s");
+        $curDateTime = date("Y-m-d H:i:s"); 
+        $startDateTime = $hunt->start_date." ". $hunt->start_time;
 
-        if($curDate < $hunt->start_date){
+        $remainSecs = $this->common_model->calcSecondsBetweenTwoDates($curDateTime, $startDateTime);
+        if($remainSecs/60 > 30){  // team/player can register the new hunt before 30 mins
             echo json_encode(
                 [
                     "status" => 0,
-                    "msg" => "Current Time : ".$curDate." ".$curTime
-                             ."<br>New Hunt Game will be started from ".$hunt->start_date." ". $hunt->start_time
+                    "msg" => "Current Time : ".$curDateTime
+                             ."<br>New Hunt Game will be started from ".$startDateTime
             ]);
             return;
-        }
-        if($curDate == $hunt->start_date){
-            $curTimeStamp = explode(":", $curTime);
-            $curTimeStamp = intval($curTimeStamp[0])*3600+intval($curTimeStamp[1])*60+intval($curTimeStamp[2]);
-            $startTimeStamp = explode(":", $hunt->start_time);
-            $startTimeStamp = intval($startTimeStamp[0])*3600+intval($startTimeStamp[1])*60+intval($startTimeStamp[2]);
-            $offset = $startTimeStamp - $curTimeStamp ;
-            if(floor($offset/60) > 30){ // team/player can register the new hunt before 30 mins
-                echo json_encode(
-                    [
-                        "status" => 0,
-                        "msg" => "Current Time : ".$curDate." ".$curTime
-                                 ."<br>New Hunt Game will be started from ".$hunt->start_date." ". $hunt->start_time
-                ]);
-                return;
-            }
         }
         echo json_encode(["status" => 1, "msg" => ""]);
     }
@@ -97,26 +83,20 @@ class Entryform extends CI_Controller
 
         $recentHunts = $this->hunt_model->getActiveHuntsSortedByDate($schoolId);
         $hunt = $recentHunts[0];
-        $curDate = date("Y-m-d");
-        $curTime = date("H:i:s");
+        $curDateTime = date("Y-m-d H:i:s");
+        $startDateTime = $hunt->start_date." ".$hunt->start_time;
+        $endDateTime = $hunt->end_date." ".$hunt->end_time;
 
-        $curTimeStamp = explode(":", $curTime);
-        $curTimeStamp = intval($curTimeStamp[0])*3600+intval($curTimeStamp[1])*60+intval($curTimeStamp[2]);
-        $startTimeStamp = explode(":", $hunt->start_time);
-        $startTimeStamp = intval($startTimeStamp[0])*3600+intval($startTimeStamp[1])*60+intval($startTimeStamp[2]);
-        $endTimeStamp = explode(":", $hunt->end_time);
-        $endTimeStamp = intval($endTimeStamp[0])*3600+intval($endTimeStamp[1])*60+intval($endTimeStamp[2]);
-
-        $remainTime = $startTimeStamp - $curTimeStamp;
-        if($curDate == $hunt->start_date && $remainTime > 0)
+        $remainSecs = $this->common_model->calcSecondsBetweenTwoDates($curDateTime, $startDateTime);
+        if($remainSecs/60 < 30 && $remainSecs/60 > 0)
             $data["hunt_status"] = "Ready";
-        if(($curDate == $hunt->start_date && $remainTime <= 0) || $curDate > $hunt->start_date){
+        if($remainSecs <= 0){
             $data["hunt_status"] = "Started";
-            $remainTime = $endTimeStamp - $curTimeStamp;
+            $remainSecs = $this->common_model->calcSecondsBetweenTwoDates($curDateTime, $endDateTime);
+            if($remainSecs <= 0)
+                $data["hunt_status"] = "Ended";
         }
-        if(($curDate > $hunt->end_date) || ($curDate == $hunt->end_date && $remainTime < 0))
-            $data["hunt_status"] = "Ended";
-        $data["remainTime"] = $remainTime;
+        $data["remainTime"] = $remainSecs;
         $data["huntInfo"] = $hunt;
 
         $created = date('Y-m-d H:i:s');

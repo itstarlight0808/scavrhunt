@@ -231,7 +231,7 @@
     
     function viewFeedback(chgNum)
     {
-        window.open("<?php echo base_url(); ?>viewFeedback/?gc=" + gamecode + "&cn=" + chgNum);
+        window.location = "<?php echo base_url(); ?>viewFeedback/?gc=" + gamecode + "&cn=" + chgNum;
     }
 
 </script>

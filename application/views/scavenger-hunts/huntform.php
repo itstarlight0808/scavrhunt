@@ -142,6 +142,10 @@
                                             <?php
                                                 }
                                             ?>
+                                            <div class="submittype-container">
+                                                <input type="checkbox" id="submitType" <?php echo $submitType=="false" ? "" : "checked=$submitType"; ?>/>
+                                                <label for="submitType">Move forward on incorrect answer.</label>
+                                            </div>
                                             <a class="btn" id="btn_submit_1" onclick="submit_answer()">
                                                 <div class="btn-line"></div>
                                                 <div class="btn-line btn-line-shift"></div>
@@ -279,6 +283,8 @@
     var chg_count = eval("<?php echo $chgCount; ?>");
     var cur_chg_num = eval("<?php echo $curChgNum; ?>");
     var cur_chg_type = eval("<?php echo $curChallenge->chg_type_id; ?>");
+    var remainTime = eval("<?php echo isset($remainTime) ? $remainTime : ''; ?>");
+    var huntInfo = <?php echo json_encode($huntInfo); ?>;
 
     $(document).ready(function(){
         for (var i=1; i<=chg_count; i++)
@@ -289,6 +295,7 @@
         {
             set_webcam();
         }
+        startTeamGameCount(remainTime, huntInfo);
     });
 
     $(window).on('resize', function(){
@@ -356,6 +363,8 @@
                     let msg = "This challenge needs to be judged!";
                     displaySuccess(0, msg);
                 }
+                if(!$("#submitType")[0].checked && !res.points)
+                    return;
                 setTimeout(gotoNextChallenge, 3000);
             }
         );
@@ -364,15 +373,16 @@
 
     function gotoNextChallenge()
     {
+        let submitType = $("#submitType")[0].checked;
         $("#inp_cur_chg_num").val(cur_chg_num + 1);
         var form = $("form#answerSubmit");
         if (cur_chg_num < chg_count - 1)
         {
-            form.attr("action", "<?php echo base_url(); ?>gotoHuntGame/?gc=" + gamecode);        
+            form.attr("action", "<?php echo base_url(); ?>gotoHuntGame/?gc=" + gamecode + "&submitType=" + submitType);        
         }
         else
         {
-            form.attr("action", "<?php echo base_url(); ?>endHuntGame/?gc=" + gamecode);
+            form.attr("action", "<?php echo base_url(); ?>endHuntGame/?gc=" + gamecode+ "&submitType=" + submitType);
         }
         form.submit();
     }

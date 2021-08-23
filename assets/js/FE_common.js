@@ -65,3 +65,17 @@ function displaySuccess(status, msg) {
     $(".alert-dlg").append(html);
     $(`.success-dlg`).hide().fadeIn();
 }
+function startTeamGameCount(remainTime, huntInfo) {
+    let html = `
+        <div class="counter-dlg" style="margin-left: auto;width: 280px;">
+            <span></span>
+        </div>`;
+    $(".navbar").append(html);
+    
+    setInterval(function() {
+        remainTime--;
+        let hms = new Date(remainTime*1000).toISOString().substr(11, 8);
+        msg = `Times remaining : ${hms}`;
+        $(".counter-dlg span").html(msg);
+    }, 1000)
+}

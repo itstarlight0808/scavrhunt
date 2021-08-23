@@ -19,6 +19,8 @@ class Huntform extends CI_Controller
         $this->load->model('school_model');
         $this->load->model('hunt_model');
         $this->load->model('challenge_model');
+        $this->load->model('common_model');
+        $this->load->model('team_model');
         date_default_timezone_set('US/Eastern');
     }
 
@@ -42,6 +44,7 @@ class Huntform extends CI_Controller
 
         if (isset($_POST["inp_cur_chg_type"]))
             $curChgType = intval($_POST["inp_cur_chg_type"]);
+        $submitType = isset($_GET["submitType"]) ? $_GET["submitType"] : 1;
 
         if ($gamecode != "")
         {
@@ -57,13 +60,19 @@ class Huntform extends CI_Controller
                 }
                 else
                 {
-                    $curDateTime = date("Y-m-d h:m:s");
-                    // if($curDateTime > $huntInfo->end_date." ".$huntInfo->end_time)
-                    //     redirect('/endHuntGame' . '/?gc=' . $gamecode);
-                    // if($curDateTime < $huntInfo->start_date." ".$huntInfo->start_time) {
-                    //     $this->load->view("scavenger-hunts/hunterror.php");
-                    //     return;
-                    // }
+                    $curDateTime = date("Y-m-d H:i:s");
+                    $startDateTime = $huntInfo->start_date." ".$huntInfo->start_time;
+                    $endDateTime = $huntInfo->end_date." ".$huntInfo->end_time;
+
+                    $remainSecs = $this->common_model->calcSecondsBetweenTwoDates($curDateTime, $startDateTime);
+                    if($remainSecs > 0) {
+                        $this->load->view("scavenger-hunts/hunterror.php");
+                        return;
+                    }
+                    $remainSecs = $this->common_model->calcSecondsBetweenTwoDates($curDateTime, $endDateTime);
+                    $teamInfo = $this->team_model->getTeamInfo($teamId);
+                    if($remainSecs <= 0 && $teamInfo->status_id == 1) // although hunt end time passed, a team can continue their playing if they started it.
+                        redirect('/endHuntGame' . '/?gc=' . $gamecode);
 
                     $chgCount = $this->challenge_model->getChallengeCountByHunt($huntId);
                     if ($chgCount == 0)
@@ -72,6 +81,14 @@ class Huntform extends CI_Controller
                     }
                     else
                     {
+                        $gameStartedDateTime = $this->hunt_model->getGameStartedDateTime($teamId);
+                        $remainSecs = $this->common_model->calcSecondsBetweenTwoDates($gameStartedDateTime, $curDateTime);
+                        if($remainSecs > $huntInfo->max_time * 60) {
+                            $this->team_model->updateTeam(["status_id" => 1], $teamId);
+                            redirect('/endHuntGame' . '/?gc=' . $gamecode);
+                        }
+                        $data["remainTime"] = $remainSecs;
+
                         $checkSubmitted = true;
                         $gameCodeId = 0;
                         while($checkSubmitted)
@@ -111,6 +128,7 @@ class Huntform extends CI_Controller
                                 $data['curChgNum'] = $curChgNum;
                                 $data['leaderBoard'] = $leaderBoard;
                                 $data['huntInfo'] = $huntInfo;
+                                $data['submitType'] = $submitType;
                                 $this->load->view("scavenger-hunts/huntform.php", $data);
                             }
                             else
@@ -176,7 +194,7 @@ class Huntform extends CI_Controller
                 }
                 else
                 {
-                    $this->load->view("scavenger-hunts/hunterror.php");
+                    $this->load->view("scavenger-hunts/hunterror3.php");
                 }
             }
             else

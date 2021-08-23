@@ -6,6 +6,7 @@ class Hunt_model extends CI_Model
     private $_tablename2 = 'hunt_types';
     private $_tablename3 = 'hunt_delivery';
     private $_tablename4 = 'hunt_gamecode';
+    private $_tablename5 = 'teams';
 
     public function getAllHuntTypes()
     {
@@ -188,5 +189,20 @@ class Hunt_model extends CI_Model
         $this->db->where('id', $gameCodeId);
         $this->db->update($this->_tablename4, $gameCodeInfo);
         return TRUE;
+    }
+
+    public function getGameStartedDateTime($teamId) {
+        $this->db->select("status_id, startedAt");
+        $this->db->where("id", $teamId);
+        
+        $result = $this->db->get($this->_tablename5)->row();
+        if($result->status_id == 1) {
+            $startedDateTime = date("Y-m-d H:i:s");
+            $this->db->where("id", $teamId);
+            $this->db->update($this->_tablename5, ["status_id" => 2, "startedAt" => $startedDateTime]);
+        }
+        else 
+            $startedDateTime = $result->startedAt;
+        return $startedDateTime;
     }
 }

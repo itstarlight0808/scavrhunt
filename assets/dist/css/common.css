@@ -5,3 +5,14 @@
     font-size: 16px;
     z-index : 999;
 }
+.submittype-container {
+    text-align: left;
+    margin-top: 25px;
+    font-size: 18px;
+    display: flex;
+}
+.submittype-container input[type='checkbox'] {
+    width: 17px;
+    height: 17px;
+    margin: 4px 6px
+}

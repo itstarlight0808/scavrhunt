@@ -28,7 +28,7 @@ class User extends BaseController
     public function index()
     {
         $this->global['pageTitle'] = 'Team Building : Dashboard';
-
+ 
         $this->loadViews("dashboard", $this->global, NULL , NULL);
     }
     

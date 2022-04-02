@@ -37,8 +37,7 @@ class Zoomaccount extends BaseController
      */
     public function zoomaccountListing()
     {
-        if($this->isAdmin() == TRUE)
-        {
+        if($this->isAdmin() == TRUE) {
             $this->loadThis();
         }
         else

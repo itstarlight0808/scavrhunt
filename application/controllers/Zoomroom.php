@@ -786,7 +786,6 @@ class Zoomroom extends BaseController
                 }
                 
                 redirect('/zoomRoomListing');
-                
             }
         }
     }

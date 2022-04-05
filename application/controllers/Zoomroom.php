@@ -46,7 +46,7 @@ class Zoomroom extends BaseController
 
         if($this->isAdmin() == TRUE)
         {
-            $this->loadThis(); 
+            $this->loadThis();
         }
         else
         {
@@ -786,6 +786,7 @@ class Zoomroom extends BaseController
                 }
                 
                 redirect('/zoomRoomListing');
+                
             }
         }
     }
